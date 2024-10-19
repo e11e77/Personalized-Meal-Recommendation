@@ -13,7 +13,7 @@ Recommendations Systems in Culinary Innovation. Volume: 11 Issue: 05 | May 2024.
 
 The goal of this project is to build an application that recommends recipes for at least a week based on personal preferences. The recommended meals should be balanced, operate under budget constraints and cater to specific dietary constrictions (e.g. vegetarian, etc.).
 
-The structure of this application should be to provide input for the user to share personal preferences. The model will then give meal recommendations for at least a week. To increase the personal user acceptance of the model, the user should be able to declare unacceptable meals and combinations as well as favorite recipes from the recommendations. With this information, the model can be fine-tuned to the specific user. 
+The structure of this application should be able to provide input for the user to share personal preferences. The model will then give meal recommendations for at least a week. To increase the personal user acceptance of the model, the user should be able to declare unacceptable meals and combinations as well as favorite recipes from the recommendations. With this information, the model can be fine-tuned to the specific user. 
 
 The approach for this project is to use Deep Reinforcement Learning with a **Policy Gradient Algorithm**. As a starting point, the **Proximal Policy Optimization** will be taken to solve the problem and improve recommendations. Furthermore, as a first step, the following datasets will need to be processed and combined. 
 
