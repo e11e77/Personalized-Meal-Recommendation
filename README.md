@@ -3,7 +3,7 @@ This repository will be used for the programming project of the lecture Applied 
 
 ## How to run
 This project is written in Python and contains a **requirements.txt** file containing all necessary libraries. The specific python version used for development is:
-- Python 3.8.10
+- ***Python 3.8.10***
 The development is done in Ubuntu (WSL 2) under Windows 10. 
 
 A makefile has been provided for ease of running the application. By changing into the directory with **Makefile** the user can download all necessary libraries with the command:
