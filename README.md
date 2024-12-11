@@ -62,6 +62,8 @@ Breakdown structure for the individual tasks during development and their evalua
  - Designing and building an appropriate network: 22 hours 
  - Training and fine-tuning that network: 14 hours
 
+Breakdown structure and estimated time for tasks still to be done in assignment 3:
+
  - Building an application to present the results: 20 hours
 
  - Writing the final report: 10 hours
