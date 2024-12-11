@@ -10,7 +10,7 @@ A makefile has been provided for ease of running the application. By changing in
 ```
 make install
 ```
-To run the entire end-to-end pipeline containing tests, preprocessing and postprocessing the following commmand can be used:
+The file ***recipes.csv*** needs to exist in the directory **data**, otherwise the application cannot be run successfully. To run the entire end-to-end pipeline containing tests, preprocessing and postprocessing the following commmand can be used:
 ```
 make run
 ```
@@ -88,4 +88,6 @@ During the development the recipe dataset underwent some changes. The final data
 
 This change was done due to the old dataset lacking nutritional information (such as proteint content, etc.). 
 
-The dataset in current use is an extensive recipe dataset with crawled data from Food.com. It holds over 500K recipes and is around 700 MB in size. Altogether there are 28 columns, containing categorical values and also missing values. Each recipe has a list of recipe ingredients in words as well as further metadata regarding the recipe. Additionally, the dataset contains search queries that return the recipe and tags assigned by the users to the recipe. 
+The dataset in current use is an extensive recipe dataset with crawled data from Food.com. It contains several files, however, the one of interest that is used for this application is ***recipes.csv*** the other files are not included.
+
+The file holds over 500K recipes and is around 700 MB in size. Altogether there are 28 columns, containing categorical values and also missing values. Each recipe has a list of recipe ingredients in words as well as further metadata regarding the recipe. Additionally, the dataset contains search queries that return the recipe and tags assigned by the users to the recipe. 
