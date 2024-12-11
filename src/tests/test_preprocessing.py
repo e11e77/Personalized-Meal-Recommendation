@@ -1,15 +1,16 @@
-import pytest
-import pandas as pd
-import numpy as np
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from preprocessing import (
     convert_time_to_minutes,
     min_max_scale_df,
     inspect_and_transform_entries_of_df,
     read_data
 )
+import pytest
+import pandas as pd
+import numpy as np
+import sys
+import os
+sys.path.insert(0, os.path.abspath(
+    os.path.join(os.path.dirname(__file__), '..')))
 
 
 @pytest.fixture
@@ -46,6 +47,7 @@ def mock_df():
     }
     return pd.DataFrame(data)
 
+
 @pytest.mark.parametrize("time_string, expected", [
     ("1H30M", 90),
     ("2H", 120),
@@ -55,6 +57,7 @@ def mock_df():
 ])
 def test_convert_time_to_minutes(time_string, expected):
     assert convert_time_to_minutes(time_string) == expected
+
 
 def test_read_data():
     data = read_data()
@@ -78,7 +81,8 @@ def test_min_max_scale_df(mock_df):
 
 
 def test_inspect_and_transform_entries_of_df(mock_df):
-    recipe_mapping, transformed_df = inspect_and_transform_entries_of_df(mock_df)
+    recipe_mapping, transformed_df = inspect_and_transform_entries_of_df(
+        mock_df)
 
     # Check recipe mapping
     assert isinstance(recipe_mapping, pd.DataFrame)

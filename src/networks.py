@@ -10,7 +10,7 @@ class QNetwork(nn.Module):
     def __init__(self, observation_space, action_space, hidden_dim, linear=False):
         """
         Initializes the QNetwork with either a fully connected linear or LSTM-based architecture.
-        
+
         Args:
             observation_space (int): The number of input features (state space dimension).
             action_space (int): The number of possible actions (action space dimension).
@@ -26,7 +26,8 @@ class QNetwork(nn.Module):
             self.layer3 = nn.Linear(hidden_dim, action_space)
         else:
             # Define an LSTM network if 'linear' is False
-            self.lstm = nn.LSTM(input_size=observation_space, hidden_size=hidden_dim, batch_first=True)
+            self.lstm = nn.LSTM(input_size=observation_space,
+                                hidden_size=hidden_dim, batch_first=True)
             self.fc = nn.Linear(hidden_dim, action_space)
 
     def forward(self, x):
@@ -47,13 +48,13 @@ class QNetwork(nn.Module):
             output, (h_n, c_n) = self.lstm(x)
             x = self.fc(output)
         return x
-    
-    
+
+
 class DDQNAgent:
     def __init__(self, env,
-                 lr=1e-3, gamma=0.99, 
-                 epsilon=0.9, epsilon_decay=0.995, epsilon_min=0.1, 
-                 episodes = 100, target_update = 10,
+                 lr=1e-3, gamma=0.99,
+                 epsilon=0.9, epsilon_decay=0.995, epsilon_min=0.1,
+                 episodes=100, target_update=10,
                  log_interval=10, eval_interval=10,
                  batch_size=32, memory_size=10000, hidden_dim=64, linear=False):
         """
@@ -75,13 +76,14 @@ class DDQNAgent:
             hidden_dim (int): Number of units in the hidden layer(s).
             linear (bool): Whether to use a fully connected linear or LSTM network.
         """
-        self.observation_space = env.observation_space.shape[0] * env.observation_space.shape[1]
+        self.observation_space = env.observation_space.shape[0] * \
+            env.observation_space.shape[1]
         self.action_space = env.action_space.n
         self.env = env
         self.log_interval = log_interval
         self.eval_interval = eval_interval
         self.obs_history = []
-        
+
         self.lr = lr
         self.gamma = gamma
         self.epsilon = epsilon
@@ -97,8 +99,10 @@ class DDQNAgent:
 
         # Initialize the replay buffer (deque) and Q-networks (main and target)
         self.memory = deque(maxlen=memory_size)
-        self.q_network = QNetwork(self.observation_space, self.action_space, hidden_dim, linear)
-        self.target_network = QNetwork(self.observation_space, self.action_space, hidden_dim, linear)
+        self.q_network = QNetwork(
+            self.observation_space, self.action_space, hidden_dim, linear)
+        self.target_network = QNetwork(
+            self.observation_space, self.action_space, hidden_dim, linear)
         self.optimizer = optim.Adam(self.q_network.parameters(), lr=self.lr)
 
         # Perform an initial copy of the parameters from the Q-network to the target network
@@ -113,7 +117,7 @@ class DDQNAgent:
     def remember(self, state, action, reward, next_state, done):
         """
         Stores the experience in the replay buffer.
-        
+
         Args:
             state (array): The current state.
             action (int): The action taken.
@@ -126,7 +130,7 @@ class DDQNAgent:
     def select_action(self, state, action_mask):
         """
         Selects an action based on the epsilon-greedy policy.
-        
+
         Args:
             state (array): The current state.
             action_mask (array): A mask indicating which actions are valid.
@@ -138,19 +142,20 @@ class DDQNAgent:
         if np.random.rand() < self.epsilon:
             # Select a random action from valid actions
             self.count_exploration += 1
-            valid_actions = [i for i, value in enumerate(action_mask) if value != 0]
+            valid_actions = [i for i, value in enumerate(
+                action_mask) if value != 0]
             return np.random.choice(valid_actions), None
         # If not exploring, select the best action based on the Q-values
         state = torch.FloatTensor(state).unsqueeze(0)   # Add batch dimension
         q_values = self.q_network(state)
-        q_values = q_values.squeeze(0)      # Remove batch dimension  
+        q_values = q_values.squeeze(0)      # Remove batch dimension
         masked_q_values = torch.tensor(action_mask) * q_values
         return torch.argmax(masked_q_values).item(), torch.max(masked_q_values).item()
-    
+
     def replay(self):
         """
         Performs a training step using experience replay.
-        
+
         Randomly sample a batch from the memory, compute the loss, and update the Q-network.
 
         Returns:
@@ -161,7 +166,7 @@ class DDQNAgent:
         # Sample a batch from the replay memory
         batch = random.sample(self.memory, self.batch_size)
         loss = self.compute_loss(batch)
-        
+
         # Perform backpropagation to update the Q-network
         self.optimizer.zero_grad()
         loss.backward()
@@ -176,7 +181,7 @@ class DDQNAgent:
     def compute_loss(self, batch):
         """
         Computes the loss for the current batch of experiences.
-        
+
         Args:
             batch (list): A batch of experiences (state, action, reward, next_state, done).
 
@@ -189,11 +194,13 @@ class DDQNAgent:
         states = torch.FloatTensor(np.array(states).reshape(len(states), -1))
         actions = torch.LongTensor(actions)
         rewards = torch.FloatTensor(rewards)
-        next_states = torch.FloatTensor(np.array(next_states).reshape(len(states), -1))
+        next_states = torch.FloatTensor(
+            np.array(next_states).reshape(len(states), -1))
         dones = torch.FloatTensor(dones)
 
         # Compute Q-values and next Q-values with target network (double DQN update rule)
-        q_values = self.q_network(states).gather(1, actions.unsqueeze(1)).squeeze()
+        q_values = self.q_network(states).gather(
+            1, actions.unsqueeze(1)).squeeze()
         next_q_values = self.target_network(next_states).max(1)[0]
         target_q_values = rewards + (1 - dones) * self.gamma * next_q_values
 
@@ -203,7 +210,7 @@ class DDQNAgent:
     def compute_average_return(self):
         """
         Evaluates the agent's performance by computing the average reward over 20 episodes.
-        
+
         Returns:
             average_return (float): The average reward over 20 episodes.
         """
@@ -213,18 +220,18 @@ class DDQNAgent:
             done = False
             while not done:
                 action_mask = self.env.action_masks()
-                action, _ = self.select_action(obs.flatten(), action_mask)   
-                obs, reward, terminated, truncated, info = self.env.step(action)
+                action, _ = self.select_action(obs.flatten(), action_mask)
+                obs, reward, terminated, truncated, info = self.env.step(
+                    action)
                 done = terminated
                 average_return += reward
         self.env.close()
         return average_return/20
 
-
     def train(self):
         """
         Trains the DDQN agent over multiple episodes.
-        
+
         For each episode, the agent interacts with the environment, stores experiences, performs 
         training steps, and logs progress periodically.
 
@@ -249,18 +256,19 @@ class DDQNAgent:
             while not done:
                 action_mask = self.env.action_masks()
                 action, max_q_value = self.select_action(state, action_mask)
-                
+
                 # Take the selected action and observe the next state and reward
-                next_state, reward, terminated, truncated, _ = self.env.step(action)
+                next_state, reward, terminated, truncated, _ = self.env.step(
+                    action)
                 done = terminated
                 obs = next_state
                 next_state = next_state.flatten()
-                
+
                 # Store the experience in the replay buffer
                 self.remember(state, action, reward, next_state, done)
                 mse_loss = self.replay()
                 state = next_state
-                # Save parameters for postprocessing 
+                # Save parameters for postprocessing
                 if mse_loss is not None:
                     total_mse_loss += mse_loss
                 total_reward += reward
@@ -276,8 +284,10 @@ class DDQNAgent:
                 self.update_target_network()
 
             if episode % self.log_interval == 0:
-                print(f"Episode: {episode}, Total Reward: {total_reward}, Total MSE Loss: {total_mse_loss}, Epsilon: {self.epsilon}")
-                print(f"# Taken Exploration / # Taken Actions: {self.count_exploration} / {self.count_taken_actions}")
+                print(
+                    f"Episode: {episode}, Total Reward: {total_reward}, Total MSE Loss: {total_mse_loss}, Epsilon: {self.epsilon}")
+                print(
+                    f"# Taken Exploration / # Taken Actions: {self.count_exploration} / {self.count_taken_actions}")
             if episode % self.eval_interval == 0:
                 average_return = self.compute_average_return()
                 print(f"Episode: {episode}, Average Return: {average_return}")

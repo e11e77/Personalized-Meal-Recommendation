@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 
 # Predefined Hyperparameters
 hyperparameters = {
-    "lr": 1e-3,         # Learning rate 
+    "lr": 1e-3,         # Learning rate
     "gamma": 0.99,      # Discount factor for future rewards
     "epsilon": 0.8,     # Initial exploration probability
     "epsilon_decay": 0.999,     # Decay rate for exploration probability
@@ -40,7 +40,7 @@ def evaluate_agent(agent, env, recipe_mapping, df_raw):
     # Simulate one week
     for _ in range(7):
         action_mask = env.action_masks()
-        action, _ = agent.select_action(obs.flatten(), action_mask)  
+        action, _ = agent.select_action(obs.flatten(), action_mask)
         obs, reward, terminated, truncated, info = env.step(action)
         total_rewards.append(reward)
         if terminated:
@@ -48,16 +48,18 @@ def evaluate_agent(agent, env, recipe_mapping, df_raw):
             obs, info = env.reset()
     env.close()
     print(f"Total evaluation reward: {np.mean(total_rewards)}")
-    
+
     # Display meals for each day and their respective nutrient details
     day_counter = 1
     for meal in meals:
-        name = recipe_mapping[recipe_mapping['RecipeId'] == meal[0]]['Name'].values[0]
+        name = recipe_mapping[recipe_mapping['RecipeId']
+                              == meal[0]]['Name'].values[0]
         print(f'Day - {day_counter}: {name}')
         print(f"{df_raw[df_raw['RecipeId'] == meal[0]]['Keywords'].values[0]}")
         day_counter += 1
-    
-    plot_state_contents(meals, agent)   # Plot nutrient content of selected meals
+
+    # Plot nutrient content of selected meals
+    plot_state_contents(meals, agent)
 
 
 def calculate_average_content(agent):
@@ -72,8 +74,8 @@ def calculate_average_content(agent):
     - A list containing average values for protein, fiber, and saturated fat per episode.
     """
     # Function to scale nutrient values back to their original range
-    unscaled_value = lambda x, column: (((x - 0) / (1 - 0)) * 
-                                    (agent.env.df[column].max() - agent.env.df[column].min())) + agent.env.df[column].min()
+    def unscaled_value(x, column): return (((x - 0) / (1 - 0)) *
+                                           (agent.env.df[column].max() - agent.env.df[column].min())) + agent.env.df[column].min()
     # Arrays to store average values per episode
     avg_protein_per_episode = []
     avg_fiber_per_episode = []
@@ -88,13 +90,16 @@ def calculate_average_content(agent):
 
         for state in episode:
             # Extract and unscale nutrient values
-            usncaled_protein_content = unscaled_value(state[np.where(df_columns=='ProteinContent')[0][0]], 'ProteinContent') 
-            usncaled_fiber_content = unscaled_value(state[np.where(df_columns=='FiberContent')[0][0]], 'FiberContent') 
-            usncaled_saturated_fat_content = unscaled_value(state[np.where(df_columns=='SaturatedFatContent')[0][0]], 'SaturatedFatContent') 
+            usncaled_protein_content = unscaled_value(
+                state[np.where(df_columns == 'ProteinContent')[0][0]], 'ProteinContent')
+            usncaled_fiber_content = unscaled_value(
+                state[np.where(df_columns == 'FiberContent')[0][0]], 'FiberContent')
+            usncaled_saturated_fat_content = unscaled_value(state[np.where(
+                df_columns == 'SaturatedFatContent')[0][0]], 'SaturatedFatContent')
             weekly_protein_content += usncaled_protein_content
             weekly_fiber_content += usncaled_fiber_content
             weekly_saturated_fat_content += usncaled_saturated_fat_content
-        
+
         # Calculate daily averages
         avg_protein = weekly_protein_content/7
         avg_fiber = weekly_fiber_content/7
@@ -102,7 +107,7 @@ def calculate_average_content(agent):
         avg_protein_per_episode.append(avg_protein)
         avg_fiber_per_episode.append(avg_fiber)
         avg_saturated_fat_per_episode.append(avg_saturated_fat)
-    
+
     return [avg_protein_per_episode, avg_fiber_per_episode, avg_protein_per_episode]
 
 
@@ -125,7 +130,8 @@ def calculate_overlap_preferences(agent, episodes):
                 overlap_fraction_week += overlap_fraction
             # For each episode the average daily fraction is computed
             avg_overlap_fraction += overlap_fraction_week/7
-        print(f"Average overlap fraction per episode with user preferred keywords: {avg_overlap_fraction/episodes}")
+        print(
+            f"Average overlap fraction per episode with user preferred keywords: {avg_overlap_fraction/episodes}")
     else:
         print("No user preferences found")
 
@@ -142,16 +148,17 @@ def plot_average_content(avg_content_array, episodes):
     labels = ['Average Protein', 'Average Fiber', 'Average Saturated Fat']
     colors = ['#1f77b4', '#2ca02c', '#d62728']  # Blue, Green, Red
     fig, axs = plt.subplots(3, 1, figsize=(10, 15))  # 3 rows, 1 column
-    
+
     for i, avg_content in enumerate(avg_content_array):
         # Plot each nutrient content over episodes
-        axs[i].plot(range(episodes), avg_content, label=labels[i], color=colors[i], linewidth=2)
+        axs[i].plot(range(episodes), avg_content,
+                    label=labels[i], color=colors[i], linewidth=2)
         axs[i].set_title(f'{labels[i]} per Meal', fontsize=14)
         axs[i].set_xlabel('Episodes')
         axs[i].set_ylabel('Average Content')
         axs[i].legend()
         axs[i].grid(True, alpha=0.5)
-    
+
     plt.tight_layout()
     plt.show()
 
@@ -210,6 +217,7 @@ def plot_mse_loss(mse_losses, episodes):
     plt.tight_layout()
     plt.show()
 
+
 def plot_q_values(q_values, episodes):
     """
     Plots the total maximum Q-values over episodes to monitor the stability of the policy.
@@ -227,6 +235,7 @@ def plot_q_values(q_values, episodes):
     plt.tight_layout()
     plt.show()
 
+
 def success_rates(avg_content_array, episodes, env):
     """
     Calculates the success rate of achieving dietary guidelines for nutrients within an allowed threshold.
@@ -240,13 +249,13 @@ def success_rates(avg_content_array, episodes, env):
     - List of success counts for each nutrient type.
     """
     labels = ['Average Protein', 'Average Fiber', 'Average Saturated Fat']
-    ideal_values = [env.user_dietary_guidelines["ProteinContent"], 
+    ideal_values = [env.user_dietary_guidelines["ProteinContent"],
                     env.user_dietary_guidelines["FiberContent"], env.user_dietary_guidelines["SaturatedFatContent"]]  # Ideal values for Protein, Fiber, Saturated Fat
-    tolerance = [5, 5, 5]  # Tolerances for each content type 
+    tolerance = [5, 5, 5]  # Tolerances for each content type
     success = []
     for i, content in enumerate(avg_content_array):
         success_count = 0  # Reset the success count for each content type
-        
+
         for episode in content:
             # Special case for saturated fat (it should be below the ideal value)
             if labels[i] == 'Average Saturated Fat' and episode < ideal_values[i]:
@@ -255,8 +264,9 @@ def success_rates(avg_content_array, episodes, env):
             # Check if within tolerance range for protein and fiber
             elif abs(episode - ideal_values[i]) < tolerance[i]:
                 success_count += 1
-    
-        print(f"Number of successes for {labels[i]}: {success_count} / {episodes}")
+
+        print(
+            f"Number of successes for {labels[i]}: {success_count} / {episodes}")
         success.append(success_count)
     return success
 
@@ -270,8 +280,8 @@ def plot_state_contents(meal_plan, agent):
     - agent: Trained DDQN agent.
     """
     # Function to scale nutrient values back to their original range
-    unscaled_value = lambda x, column: (((x - 0) / (1 - 0)) * 
-                                    (agent.env.df[column].max() - agent.env.df[column].min())) + agent.env.df[column].min()
+    def unscaled_value(x, column): return (((x - 0) / (1 - 0)) *
+                                           (agent.env.df[column].max() - agent.env.df[column].min())) + agent.env.df[column].min()
     df_columns = np.array(agent.env.df.columns)
     protein_values = []
     fiber_values = []
@@ -279,9 +289,12 @@ def plot_state_contents(meal_plan, agent):
 
     # Extract nutrient values for each day in the meal plan
     for day in meal_plan:
-        unscaled_protein_content = unscaled_value(day[np.where(df_columns=='ProteinContent')[0][0]], 'ProteinContent')
-        unscaled_fiber_content = unscaled_value(day[np.where(df_columns=='FiberContent')[0][0]], 'FiberContent')
-        unscaled_saturated_fat_content = unscaled_value(day[np.where(df_columns=='SaturatedFatContent')[0][0]], 'SaturatedFatContent')  
+        unscaled_protein_content = unscaled_value(
+            day[np.where(df_columns == 'ProteinContent')[0][0]], 'ProteinContent')
+        unscaled_fiber_content = unscaled_value(
+            day[np.where(df_columns == 'FiberContent')[0][0]], 'FiberContent')
+        unscaled_saturated_fat_content = unscaled_value(
+            day[np.where(df_columns == 'SaturatedFatContent')[0][0]], 'SaturatedFatContent')
         protein_values.append(unscaled_protein_content)
         fiber_values.append(unscaled_fiber_content)
         saturated_fat_values.append(unscaled_saturated_fat_content)
@@ -290,12 +303,15 @@ def plot_state_contents(meal_plan, agent):
     print(f"Protein Content of the meals: {protein_values}")
     print(f"Fiber Content of the meals: {fiber_values}")
     print(f"Saturated Fat Content of the meals: {saturated_fat_values}")
-    
+
     # Plot nutrient values over the week
     plt.figure(figsize=(10, 6))
-    plt.plot(np.arange(0, len(meal_plan)), protein_values, label='Protein Content', color='#1f77b4', linewidth=2)
-    plt.plot(np.arange(0, len(meal_plan)), fiber_values, label='Fiber Content', color='#2ca02c', linewidth=2)
-    plt.plot(np.arange(0, len(meal_plan)), saturated_fat_values, label='Saturated Fat Content', color='#d62728', linewidth=2)
+    plt.plot(np.arange(0, len(meal_plan)), protein_values,
+             label='Protein Content', color='#1f77b4', linewidth=2)
+    plt.plot(np.arange(0, len(meal_plan)), fiber_values,
+             label='Fiber Content', color='#2ca02c', linewidth=2)
+    plt.plot(np.arange(0, len(meal_plan)), saturated_fat_values,
+             label='Saturated Fat Content', color='#d62728', linewidth=2)
     plt.xlabel('Days', fontsize=12)
     plt.ylabel('Content Value', fontsize=12)
     plt.legend(fontsize=12)
@@ -319,8 +335,9 @@ if __name__ == '__main__':
     user_meal_indices = random.sample(range(0, df_processed.shape[0]-1), 10)
 
     # Initialize the meal planning environment
-    env_py = MealPlannerEnv(df_processed, user_dietary_guidelines, user_meal_indices)
-    
+    env_py = MealPlannerEnv(
+        df_processed, user_dietary_guidelines, user_meal_indices)
+
     # Create and train the DDQN agent
     agent = DDQNAgent(env_py, **hyperparameters)
     rewards, mse_losses, num_episodes, eval_avg_return = agent.train()
@@ -331,7 +348,7 @@ if __name__ == '__main__':
     # Analyze and visualize training metrics
     content_arrays = calculate_average_content(agent)
     plot_average_content(content_arrays, num_episodes)
-    
+
     calculate_overlap_preferences(agent, num_episodes)
     success_rates(content_arrays, num_episodes, env_py)
 
@@ -340,7 +357,3 @@ if __name__ == '__main__':
     plot_rewards(rewards, num_episodes)
     plot_mse_loss(rewards, num_episodes)
     plot_q_values(agent.q_values_array, num_episodes)
-
-    
-   
-    
