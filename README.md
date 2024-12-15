@@ -47,11 +47,12 @@ The goal of this deep reinforcement model is to create a balanced weekly meal pl
 ### Success Rate
 The **success rate** measures the fraction of episodes where the average content of protein, fiber, and saturated fat across the selected meals meets the user’s dietary guidelines within a specified threshold. Ideally, the agent should achieve an **80% success rate** for each nutrient, meaning at least 80% of episodes should see the average content fall within the required range. Protein and saturated fat content generally perform well, but fiber underperforms. This can be attributed to the average fiber content in the dataset being significantly lower than required for the dietary goal.
 
+Further metrics that are used to help evaluate the model are the following two listed below. However, it is important to note that ultimately, the success rate determines the final performance of the model.
 ### Average Return
-The **average return** reflects the overall performance of the agent by measuring the rewards accumulated across episodes. This metric helps assess the stability of the learning process but is not necessarily an outstanding influence when anaylzing the error metric. The agent is expected to converge to a consistent and high average return, but occasional spikes in reward indicate some instability in the network's learning.
+The **average return** reflects the overall performance of the agent by measuring the rewards accumulated across episodes. This metric helps assess the stability of the learning process but is not necessarily a significant influence when analyzing the error metric. The agent is expected to converge to a consistent and high average return, but occasional spikes in reward indicate some instability in the network's learning.
 
 ### MSE - Loss Function
-The ***DDQN*** agent uses for the loss function the ***mean squared error***. However, this loss function is not used as prioritized guide to evaluate the success of the model. The ***success rate** is the defining error metric when talking about the model's performance. 
+The ***DDQN*** agent uses the ***mean squared error*** for the loss function during training. 
 
 ## Work breakdown
 Breakdown structure for the individual tasks during development and their evaluated time:
