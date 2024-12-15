@@ -287,7 +287,7 @@ class DDQNAgent:
                 print(
                     f"Episode: {episode}, Total Reward: {total_reward}, Total MSE Loss: {total_mse_loss}, Epsilon: {self.epsilon}")
                 print(
-                    f"# Taken Exploration / # Taken Actions: {self.count_exploration} / {self.count_taken_actions}")
+                    f"(# Taken Exploration / # Taken Actions): {self.count_exploration} / {self.count_taken_actions}")
             if episode % self.eval_interval == 0:
                 average_return = self.compute_average_return()
                 print(f"Episode: {episode}, Average Return: {average_return}")

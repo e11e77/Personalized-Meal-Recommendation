@@ -1,6 +1,3 @@
-from custom_env import MealPlannerEnv
-from networks import DDQNAgent
-from postprocessing import *
 import pytest
 import pandas as pd
 from unittest.mock import patch
@@ -8,7 +5,9 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..')))
-
+from custom_env import MealPlannerEnv
+from networks import DDQNAgent
+from postprocessing import *
 
 @pytest.fixture
 def mock_mapping():

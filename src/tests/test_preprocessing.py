@@ -1,9 +1,3 @@
-from preprocessing import (
-    convert_time_to_minutes,
-    min_max_scale_df,
-    inspect_and_transform_entries_of_df,
-    read_data
-)
 import pytest
 import pandas as pd
 import numpy as np
@@ -11,7 +5,12 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..')))
-
+from preprocessing import (
+    convert_time_to_minutes,
+    min_max_scale_df,
+    inspect_and_transform_entries_of_df,
+    read_data
+)
 
 @pytest.fixture
 def mock_df():

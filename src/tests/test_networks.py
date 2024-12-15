@@ -1,6 +1,5 @@
-from custom_env import MealPlannerEnv
 import pandas as pd
-from networks import QNetwork, DDQNAgent
+
 import pytest
 import torch
 import numpy as np
@@ -9,7 +8,8 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..')))
-
+from networks import QNetwork, DDQNAgent
+from custom_env import MealPlannerEnv
 
 @pytest.fixture
 def mock_env():

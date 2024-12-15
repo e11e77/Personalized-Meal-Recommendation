@@ -8,12 +8,12 @@ from sklearn.decomposition import PCA
 # Predefined Hyperparameters
 hyperparameters = {
     "lr": 1e-3,         # Learning rate
-    "gamma": 0.99,      # Discount factor for future rewards
-    "epsilon": 0.8,     # Initial exploration probability
-    "epsilon_decay": 0.999,     # Decay rate for exploration probability
+    "gamma": 0.9,      # Discount factor for future rewards
+    "epsilon": 0.9,     # Initial exploration probability
+    "epsilon_decay": 0.995,     # Decay rate for exploration probability
     "epsilon_min": 0.1,         # Minimum exploration probability
     "episodes": 150,            # Total number of episodes for training
-    "target_update": 50,        # Frequency of updating the target network
+    "target_update": 10,        # Frequency of updating the target network
     "log_interval": 100,        # Interval for logging metrics
     "eval_interval": 100,       # Interval for evaluating the agent
     "batch_size": 32,           # Number of experiences sampled per training step

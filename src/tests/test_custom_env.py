@@ -1,6 +1,5 @@
 import warnings
 from stable_baselines3.common.env_checker import check_env
-from custom_env import MealPlannerEnv
 from unittest.mock import patch
 import pytest
 import numpy as np
@@ -10,7 +9,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..')))
-
+from custom_env import MealPlannerEnv
 
 @pytest.fixture
 def mock_df():
