@@ -16,7 +16,7 @@ make run
 ```
 Only running the tests can be done with:
 ```
-make tests
+make test
 ```
 
 ## Changes in Development
