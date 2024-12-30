@@ -1,6 +1,6 @@
 import random
 import numpy as np
-import pickle 
+import pickle
 
 import sys
 import os
@@ -8,9 +8,9 @@ import os
 # Necessary for importing modules
 sys.path.insert(0, os.path.abspath(
     os.path.join(os.path.dirname(__file__), '..')))
-from custom_env import *
-from networks import DDQNAgent
 from preprocessing import *
+from networks import DDQNAgent
+from custom_env import *
 
 # Predefined Hyperparameters
 hyperparameters = {
@@ -40,7 +40,7 @@ def save_model(model, filename='meal_planner.sav'):
 
     This function uses the `pickle` module to serialize the object and store it in a file.
     """
-    current_dir = os.path.dirname(__file__)  
+    current_dir = os.path.dirname(__file__)
     file_path = os.path.join(current_dir, filename)
 
     pickle.dump(model, open(file_path, 'wb'))
@@ -78,7 +78,6 @@ def predict_week(agent, recipe_mapping):
     return named_meals
 
 
-
 if __name__ == '__main__':
     """
     Main entry point of the script. This section of the code initializes the environment, 
@@ -104,7 +103,8 @@ if __name__ == '__main__':
         if not recipe_mapping['RecipeId'].isin([random_index]).any():
             print('Index does not exist in mapping - skipping element.')
             continue
-        name = recipe_mapping[recipe_mapping['RecipeId'] == random_index]['Name'].values[0]
+        name = recipe_mapping[recipe_mapping['RecipeId']
+                              == random_index]['Name'].values[0]
         print(f"Meal: {name}")
         choice = input("Add that meal to preferred recipes [y/n]?: ")
         if choice == 'y':
@@ -115,13 +115,11 @@ if __name__ == '__main__':
     # Initialize the meal planning environment
     env_py = MealPlannerEnv(
         df_processed, user_dietary_guidelines, user_indices)
-    
+
     # Create and train the DDQN agent
     agent = DDQNAgent(env_py, **hyperparameters)
     rewards, mse_losses, num_episodes, eval_avg_return = agent.train()
-    
+
     # Store mapping and model
     save_model(agent, 'meal_planner.sav')
     save_model(recipe_mapping, 'recipe_mapping.sav')
-    
-
