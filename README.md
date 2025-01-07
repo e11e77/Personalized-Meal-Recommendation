@@ -1,5 +1,5 @@
 # Personalized-Meal-Recommendation
-This repository will be used for the programming project of the lecture Applied Deep Learning WS24/25. The README gives an overview of the chosen project and the estimated road map. 
+This repository will be used for the programming project of the lecture Applied Deep Learning WS24/25. The README gives an overview of the chosen project and the road map. 
 
 ## How to run
 This project is written in Python and contains a **requirements.txt** file containing all necessary libraries. The specific python version used for development is:
@@ -17,6 +17,11 @@ make run
 Only running the tests can be done with:
 ```
 make test
+```
+
+To start the demo application for this project:
+```
+make demo
 ```
 
 ## Changes in Development
@@ -63,10 +68,9 @@ Breakdown structure for the individual tasks during development and their evalua
  - Designing and building an appropriate network: 22 hours 
  - Training and fine-tuning that network: 14 hours
 
+  - Building an application to present the results: 15 hours
+
 Breakdown structure and estimated time for tasks still to be done in assignment 3:
-
- - Building an application to present the results: 20 hours
-
  - Writing the final report: 10 hours
  - Preparing the presentation of my work: 4 hours
 
@@ -80,10 +84,12 @@ The idea to use Deep Reinforcement Learning for my project was taken from the tw
 - Neha Tyagi; Vijay Maheshwari. Recipe Renaissance: Leveraging Deep Reinforcement Learning for Food
 Recommendations Systems in Culinary Innovation. Volume: 11 Issue: 05 | May 2024. https://www.irjet.net/archives/V11/i5/IRJET-V11I5243.pdf
 
-This application recommends recipes for at least a week based on personal preferences. The recommended meals should be balanced and cater to specific dietary constrictions (e.g. vegetarian, etc.).
+### Demo
+For the demo, a web application has been created. This application recommends recipes for at least a week based on stored personal preferences. The necessary data is fetched from a GitHub release if no local data can be found. (Files need to be saved in the ***demo*** folder within the ***src*** directory) 
 
-For the demo the following structure is planned:
-This application should be able to provide input for the user to share personal preferences. The model will then give meal recommendations for at least a week. To increase the personal user acceptance of the model, the user should be able to declare unacceptable meals and combinations as well as favorite recipes from the recommendations. With this information, the model can be fine-tuned to the specific user. 
+The model will then give meal recommendations for at least a week. To increase the personal user acceptance of the model, the user can declare favorite recipes and adjust target nutrient content. With this information, the model can be re-trained and fine-tuned to the specific user.
+
+The coding logic can be found in the ***demo*** folder within the ***src*** directory. The script ***prepare_demo.py*** is used during development to initialize the custom trained model. For the final demonstration the user only needs the script ***demo.py***.
 
 ## Datasets
 During the development the recipe dataset underwent some changes. The final dataset is:

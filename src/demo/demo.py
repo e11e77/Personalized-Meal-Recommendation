@@ -4,7 +4,6 @@ import dash_bootstrap_components as dbc
 import pickle
 import random
 import plotly.graph_objs as go
-import pandas as pd
 import sys
 import requests
 import os
@@ -33,14 +32,17 @@ def load_model(filename):
     file_path = os.path.join(current_dir, filename)
     if os.path.exists(file_path):
         # Load the model from the local filesystem
+        print(f"Loading file from path: {file_path}")
         return pickle.load(open(file_path, 'rb'))
     else:
         # Construct the release URL for downloading the model
-        release_url = f"https://github.com/e11e77/Personalized-Meal-Recommendation/releases/download/v1.0.0-alpha/{filename}"
+        release_url = f"https://github.com/e11e77/Personalized-Meal-Recommendation/releases/download/v1.0.0/{filename}"
+        print(f"Loading file from release: {release_url}")
         response = requests.get(release_url)
         if response.status_code == 200:
             # The file is fetched successfully, now load it
             model_file = io.BytesIO(response.content)
+            print("Finished.")
             return pickle.load(model_file)
         else:
             raise ValueError(
@@ -155,11 +157,17 @@ def extract_nutrient_values(meal_plan, agent):
     return protein_values, fiber_values, saturated_fat_values
 
 
-# Load the trained agent and recipe mapping
-agent = load_model('meal_planner.sav')
-recipe_mapping = load_model('recipe_mapping.sav')
+# ====================================================== INITIALIZE RESOURCES ======================================================
+try:
+    # Load the trained agent and recipe mapping
+    agent = load_model('meal_planner.sav')
+    recipe_mapping = load_model('recipe_mapping.sav')
+    meal_options = get_random_meals(agent, recipe_mapping, 10)
+except Exception as e:
+    print(f"Error occurred during initialization : {e}")
+    sys.exit(1)
 
-meal_options = get_random_meals(agent, recipe_mapping, 10)
+# =================================================== START of DASH APP ==============================================================
 # Initialize Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -277,12 +285,12 @@ app.layout = html.Div(
                                 'marginRight': '10px', 'marginLeft': '10px'
                             }
                         ),
-                        # Loading Screen while model is being trained
+                        # Loading Screen while model is being trained and status message output
                         dcc.Loading(
                             id='loading-train-status',
                             type='default',
                             children=html.Div(
-                                id='train-status', style={'marginTop': '10px', 'color': '#007bff'})
+                                id='status-message', style={'marginTop': '10px', 'color': '#007bff'})
                         )
                     ],
                     style={'textAlign': 'center', 'marginBottom': '20px'}
@@ -310,7 +318,7 @@ app.layout = html.Div(
 
 
 @app.callback(
-    Output('train-status', 'children'),
+    Output('status-message', 'children', allow_duplicate=True),
     Input('train-button', 'n_clicks'),
     [
         State('checkboxes', 'value'),
@@ -347,7 +355,7 @@ def train_model(n_clicks, selected_meals, protein_target, fiber_target, saturate
 
 
 @app.callback(
-    Output('save-button', 'children'),
+    Output('status-message', 'children', allow_duplicate=True),
     Input('save-button', 'n_clicks'),
     prevent_initial_call=True
 )
@@ -356,7 +364,7 @@ def save_model(n_clicks):
     Saves the current agent to a local file.
 
     Parameters:
-        n_clicks (int): The number of times the 'Save Model' button has been clicked.
+        n_clicks (int): The number of times the 'Save Model' button has been clicked. Not used.
 
     Returns:
         str: A message indicating that the model has been saved.
@@ -372,7 +380,8 @@ def save_model(n_clicks):
 
 @app.callback(
     [Output('meal-output', 'children'),
-     Output('average-nutrient-plot', 'figure')],
+     Output('average-nutrient-plot', 'figure'),
+     Output('status-message', 'children', allow_duplicate=True)],
     [Input('predict-button', 'n_clicks')],
     prevent_initial_call=True
 )
@@ -382,7 +391,7 @@ def display_meal_plan(n_clicks):
     including nutrient content and a plot showing average nutrient values.
 
     Parameters:
-        n_clicks (int): The number of times the 'Get Weekly Meal Plan' button has been clicked.
+        n_clicks (int): The number of times the 'Get Weekly Meal Plan' button has been clicked. Not used.
 
     Returns:
         tuple: A tuple containing the HTML structure for the meal plan display and the plot figure for the average nutrient values.
@@ -436,7 +445,7 @@ def display_meal_plan(n_clicks):
         plot_bgcolor='#f4f4f9'
     )
 
-    return meal_sections, figure
+    return meal_sections, figure, ""
 
 
 # Run the app

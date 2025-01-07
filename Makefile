@@ -10,6 +10,7 @@ SCRIPT := src/postprocessing.py
 SRC_DIR := src 
 DATA_DIR := data 
 TEST_DIR := src/tests
+DEMO_DIR := src/demo
 
 install:
 	@echo "Installing all the necessary libraries..."
@@ -24,3 +25,7 @@ run:
 test:
 	@echo "Running the tests..."
 	pytest $(TEST_DIR)
+
+demo:
+	@echo "Starting the demo..."
+	$(PYTHON) $(DEMO_DIR)/demo.py
