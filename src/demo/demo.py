@@ -204,7 +204,7 @@ app.layout = html.Div(
                                     min=0,
                                     max=50,
                                     step=5,
-                                    value=user_dietary_guidelines['ProteinContent'],
+                                    value=agent.env.user_dietary_guidelines['ProteinContent'],
                                     marks={i: str(i) for i in range(0, 51, 5)},
                                     id='protein-slider'
                                 ),
@@ -215,7 +215,7 @@ app.layout = html.Div(
                                     min=0,
                                     max=50,
                                     step=5,
-                                    value=user_dietary_guidelines['FiberContent'],
+                                    value=agent.env.user_dietary_guidelines['FiberContent'],
                                     marks={i: str(i) for i in range(0, 51, 5)},
                                     id='fiber-slider'
                                 ),
@@ -226,7 +226,7 @@ app.layout = html.Div(
                                     min=0,
                                     max=50,
                                     step=5,
-                                    value=user_dietary_guidelines['SaturatedFatContent'],
+                                    value=agent.env.user_dietary_guidelines['SaturatedFatContent'],
                                     marks={i: str(i) for i in range(0, 51, 5)},
                                     id='saturated-fat-slider'
                                 ),
