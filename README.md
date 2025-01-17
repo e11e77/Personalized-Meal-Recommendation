@@ -1,5 +1,5 @@
 # Personalized-Meal-Recommendation
-This repository will be used for the programming project of the lecture Applied Deep Learning WS24/25. The README gives an overview of the chosen project and the road map. The final report can be found in **Report.pdf**.
+This repository will be used for the programming project of the lecture Applied Deep Learning WS24/25. The README gives an overview of the chosen project and the road map.
 
 ## How to run
 This project is written in Python and contains a **requirements.txt** file containing all necessary libraries. The specific python version used for development is:
