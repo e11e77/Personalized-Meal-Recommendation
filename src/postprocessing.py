@@ -108,7 +108,7 @@ def calculate_average_content(agent):
         avg_fiber_per_episode.append(avg_fiber)
         avg_saturated_fat_per_episode.append(avg_saturated_fat)
 
-    return [avg_protein_per_episode, avg_fiber_per_episode, avg_protein_per_episode]
+    return [avg_protein_per_episode, avg_fiber_per_episode, avg_saturated_fat_per_episode]
 
 
 def calculate_overlap_preferences(agent, episodes):

@@ -1,5 +1,5 @@
 # Personalized-Meal-Recommendation
-This repository will be used for the programming project of the lecture Applied Deep Learning WS24/25. The README gives an overview of the chosen project and the road map. 
+This repository will be used for the programming project of the lecture Applied Deep Learning WS24/25. The README gives an overview of the chosen project and the road map. The final report can be found in **Report.pdf**.
 
 ## How to run
 This project is written in Python and contains a **requirements.txt** file containing all necessary libraries. The specific python version used for development is:
@@ -63,16 +63,14 @@ The ***DDQN*** agent uses the ***mean squared error*** for the loss function dur
 Breakdown structure for the individual tasks during development and their evaluated time:
 
  - Dataset collection: 1 hour
- - Dataset preparation, processing and transformation: 6 hours
+ - Dataset preparation, processing and transformation: 10 hours
 
  - Designing and building an appropriate network: 22 hours 
  - Training and fine-tuning that network: 14 hours
 
   - Building an application to present the results: 15 hours
-
-Breakdown structure and estimated time for tasks still to be done in assignment 3:
- - Writing the final report: 10 hours
- - Preparing the presentation of my work: 4 hours
+  - Writing the final report: 10 hours
+  - Preparing the presentation of my work: 7 hours
 
 ## About
 As a topic, I have decided on a **Deep Reinforcement Learning** topic -  specifically, as mentioned above, a **Personalized Meal Recommendation**. 
